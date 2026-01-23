@@ -120,61 +120,55 @@ export default function Dashboard() {
       : 0;
 
   const recommendations = getRecommendations();
-return (
-  <div className={`dashboard ${darkMode ? "dark" : ""}`}>
-    {/* TOP MENU */}
-    <header className="w-full bg-slate-900 text-white flex flex-col md:flex-row items-center justify-between px-4 py-3 md:py-4 shadow-md fixed top-0 left-0 z-50">
-      <div className="flex items-center gap-3">
-        <h5 className="font-bold text-lg md:text-xl">🚗 Fuel Dashboard</h5>
+
+  return (
+    <div className={`dashboard ${darkMode ? "dark" : ""}`}>
+      {/* SIDEBAR */}
+      <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
+        <div className="sidebar-header">
+          {!collapsed && <h5>🚗 Fuel Dashboard</h5>}
+          <button className="toggle-btn" onClick={() => setCollapsed(!collapsed)}>
+            {collapsed ? "➡" : "⬅"}
+          </button>
+        </div>
+
         {!collapsed && (
-          <div className="hidden md:flex items-center gap-3 ml-4">
+          <div className="profile">
             <UserButton />
-            <div className="flex flex-col">
-              <span className="font-semibold">{user?.fullName}</span>
-              <small className="text-gray-300">{user?.primaryEmailAddress?.emailAddress}</small>
-            </div>
-            <div className="badge bg-info ml-2">{role.toUpperCase()}</div>
+            <h6>{user?.fullName}</h6>
+            <small>{user?.primaryEmailAddress?.emailAddress}</small>
+            <div className="badge bg-info mt-2">{role.toUpperCase()}</div>
           </div>
         )}
-      </div>
 
-      {/* Hamburger / Collapse toggle */}
-      <div className="md:hidden flex items-center gap-2">
-        <button
-          className="text-white text-2xl p-1"
-          onClick={() => setCollapsed(!collapsed)}
-        >
-          {collapsed ? "☰" : "✕"}
-        </button>
-      </div>
+        <nav>
+          {[
+            ["dashboard", "📊 Dashboard"],
+            ["vehicles", "🚘 Vehicles"],
+            ["predict", "📈 Prediction"],
+            ["reports", "🧾 Reports"],
+            ["recommend", "⭐ Recommendations"],
+            ["upload", "⬆ Upload & Generate Reports"],
+           ["chatbot", "🤖 AI Chatbot"],
 
-      {/* MENU ITEMS */}
-      <nav className={`flex flex-col md:flex-row md:items-center md:gap-4 mt-2 md:mt-0 ${collapsed ? "block" : "hidden md:flex"}`}>
-        {[
-          ["dashboard", "📊 Dashboard"],
-          ["vehicles", "🚘 Vehicles"],
-          ["predict", "📈 Prediction"],
-          ["reports", "🧾 Reports"],
-          ["recommend", "⭐ Recommendations"],
-          ["upload", "⬆ Upload & Generate Reports"],
-          ["chatbot", "🤖 AI Chatbot"],
-        ].map(([key, label]) => (
-          <button
-            key={key}
-            className={`menu-btn md:mx-1 my-1 md:my-0 ${active === key ? "active" : ""}`}
-            onClick={() => setActive(key)}
-          >
-            {label}
-          </button>
-        ))}
+          ].map(([key, label]) => (
+            <button
+              key={key}
+              className={`menu-btn ${active === key ? "active" : ""}`}
+              onClick={() => setActive(key)}
+            >
+              {label}
+            </button>
+          ))}
+        </nav>
 
-        {/* Logout */}
-        <SignOutButton redirectUrl="/">
-          <button className="logout-btn md:ml-2 mt-2 md:mt-0">Logout</button>
-        </SignOutButton>
-      </nav>
-    </header>
-    
+        <div className="mt-auto">
+          <SignOutButton redirectUrl="/">
+            <button className="logout-btn">Logout</button>
+          </SignOutButton>
+        </div>
+      </aside>
+
       {/* MAIN CONTENT */}
       <main className="main-content">
         <div className="top-bar">
