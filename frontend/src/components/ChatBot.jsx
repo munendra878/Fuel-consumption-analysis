@@ -94,7 +94,7 @@ dashboard | prediction | upload | reports | recommendations | co2 | fuel | healt
     }
 
     if (q.includes("predict")) {
-      navigate("/predictionCard");
+      navigate("/PredictionCard.jsx");
       return "📈 Starting prediction...";
     }
 
