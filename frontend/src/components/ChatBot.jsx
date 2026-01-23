@@ -1,7 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./ChatBot.css";
 
 export default function ChatBot() {
+  const navigate = useNavigate();
+
   const [messages, setMessages] = useState([
     {
       sender: "bot",
@@ -29,92 +32,50 @@ Type <b>help</b> to see all options.
   const getBotReply = (question) => {
     const q = question.toLowerCase();
 
-    if (q.includes("help") || q.includes("menu")) {
+    if (q.includes("help")) {
       return `
-<b>📌 System Help Menu</b><br/><br/>
-
-📊 <b>Dashboard</b> – Overview of vehicles & CO₂  
-<Link to="/dashboard">Go to Dashboard</Link>
-
-
-📈 <b>Prediction</b> – Predict fuel & emissions  
-<Link to="/prediction">Go to Prediction</Link>
-
-⬆ <b>Upload</b> – Upload CSV dataset  
-<a href="/upload">Upload Dataset</a><br/><br/>
-
-🧾 <b>Reports</b> – Download fuel & CO₂ reports  
-<a href="/reports">View Reports</a><br/><br/>
-
-⭐ <b>Recommendations</b> – Best fuel-efficient vehicles  
-<a href="/recommendations">View Recommendations</a><br/><br/>
-
-🚪 <b>Logout</b> – Securely exit account  
-<a href="/logout">Logout</a>
+<b>📌 Help Menu</b><br/><br/>
+• dashboard<br/>
+• prediction<br/>
+• upload<br/>
+• reports<br/>
+• recommendations<br/>
+• co2<br/>
+• fuel<br/>
+• health
       `;
     }
 
     if (q.includes("dashboard")) {
-      return `
-📊 <b>Dashboard Overview</b><br/><br/>
-• Total vehicles analyzed<br/>
-• Average fuel consumption<br/>
-• Average CO₂ emissions<br/>
-• Vehicle comparison table<br/><br/>
-<a href="/dashboard">Open Dashboard</a>
-      `;
+      navigate("/dashboard");
+      return "📊 Opening dashboard for you...";
     }
 
     if (q.includes("predict")) {
-      return `
-📈 <b>Fuel & CO₂ Prediction</b><br/><br/>
-Predictions are based on:
-• Engine size  
-• Horsepower  
-• Cylinders<br/><br/>
-<a href="/prediction">Start Prediction</a>
-      `;
+      navigate("/prediction");
+      return "📈 Let’s predict fuel & CO₂ emissions.";
     }
 
     if (q.includes("upload")) {
-      return `
-⬆ <b>Dataset Upload</b><br/><br/>
-Upload CSV files to:
-• Parse vehicle data  
-• Calculate fuel usage  
-• Estimate CO₂ emissions<br/><br/>
-<a href="/upload">Upload Dataset</a>
-      `;
+      navigate("/upload");
+      return "⬆ Ready to upload your dataset.";
     }
 
     if (q.includes("report")) {
-      return `
-🧾 <b>Reports & Analysis</b><br/><br/>
-Reports include:
-• Total CO₂ emissions  
-• Fuel consumption summary  
-• Downloadable PDF/CSV<br/><br/>
-<a href="/reports">View Reports</a>
-      `;
+      navigate("/reports");
+      return "🧾 Showing reports & analysis.";
     }
 
     if (q.includes("recommend")) {
-      return `
-⭐ <b>Vehicle Recommendations</b><br/><br/>
-Based on:
-• Lowest fuel usage  
-• Lower CO₂ emissions  
-• Best efficiency<br/><br/>
-<a href="/recommendations">View Recommendations</a>
-      `;
+      navigate("/recommendations");
+      return "⭐ Finding best fuel-efficient vehicles.";
     }
 
     if (q.includes("co2")) {
       return `
-🌍 <b>CO₂ Calculation</b><br/><br/>
-Formula used:<br/>
-<b>Fuel Consumption × 2392 g/km</b><br/><br/>
-Lower fuel = lower emissions 🌱
+🌍 <b>CO₂ Formula</b><br/><br/>
+Fuel Consumption × <b>2392 g/km</b><br/>
+Lower fuel = cleaner environment 🌱
       `;
     }
 
@@ -122,19 +83,22 @@ Lower fuel = lower emissions 🌱
       return `
 ⛽ <b>Fuel Consumption</b><br/><br/>
 Measured in <b>L/100km</b><br/>
-Lower values mean:
-• Better mileage  
-• Lower cost  
-• Less pollution
+Lower is better ✔
       `;
     }
 
-    if (q.includes("logout")) {
+    if (q.includes("health") || q.includes("backend")) {
       return `
-🚪 <b>Logout</b><br/><br/>
-Use the logout option to safely end your session.<br/><br/>
-<a href="/logout">Logout</a>
+🟢 <b>System Health</b><br/><br/>
+Backend: Online<br/>
+API: Connected<br/>
+Database: Active
       `;
+    }
+
+    if (q.includes("clear")) {
+      setMessages([]);
+      return "🧹 Chat cleared.";
     }
 
     if (q.includes("hi") || q.includes("hello")) {
@@ -143,13 +107,9 @@ Use the logout option to safely end your session.<br/><br/>
 
     return `
 🤖 I didn’t understand that.<br/><br/>
-Try asking about:
-• dashboard  
-• prediction  
-• upload  
-• reports  
-• recommendations<br/><br/>
-Or type <b>help</b>.
+Try:
+<b>dashboard, prediction, upload, reports, recommendations</b><br/>
+or type <b>help</b>.
     `;
   };
 
@@ -167,7 +127,7 @@ Or type <b>help</b>.
         { sender: "bot", text: getBotReply(input) },
       ]);
       setTyping(false);
-    }, 700);
+    }, 600);
   };
 
   return (
@@ -175,9 +135,7 @@ Or type <b>help</b>.
       <div className="chat-window">
         {messages.map((msg, i) => (
           <div key={i} className={`chat-message ${msg.sender}`}>
-            <div
-              dangerouslySetInnerHTML={{ __html: msg.text }}
-            />
+            <div dangerouslySetInnerHTML={{ __html: msg.text }} />
           </div>
         ))}
         {typing && <div className="chat-message bot">Typing...</div>}
