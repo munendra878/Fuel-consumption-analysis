@@ -9,15 +9,19 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
 
+  // Load saved theme from localStorage
   useEffect(() => {
     const saved = localStorage.getItem("theme");
     if (saved === "dark") setDarkMode(true);
   }, []);
 
+  // Apply theme
   useEffect(() => {
     document.documentElement.classList.toggle("dark", darkMode);
     localStorage.setItem("theme", darkMode ? "dark" : "light");
   }, [darkMode]);
+
+  const links = ["Home", "About", "Feedback", "Blogs", "Developer", "Privacy"];
 
   const neonHover = {
     scale: 1.05,
@@ -27,7 +31,7 @@ function Navbar() {
 
   return (
     <nav className="fixed top-4 left-0 right-0 mx-auto z-50 max-w-7xl px-6 md:px-12">
-      <div className="flex items-center justify-between backdrop-blur-md bg-black/40 border border-slate-700 rounded-full px-6 py-4 transition-all shadow-lg">
+      <div className="flex items-center justify-between backdrop-blur-md bg-black/40 border border-slate-700 rounded-full px-6 py-4 shadow-lg transition-all">
         {/* LOGO */}
         <Link to="/" className="flex items-center gap-3">
           <img src={logo} alt="Logo" className="h-10 w-10" />
@@ -38,24 +42,21 @@ function Navbar() {
 
         {/* DESKTOP LINKS */}
         <div className="hidden md:flex items-center gap-6 ml-10">
-          {["Home", "About", "Feedback", "Blogs", "Developer", "Privacy"].map(
-            (link, i) => (
-              <Link
-                key={i}
-                to={`/${link.toLowerCase()}`}
-                className={`relative text-white hover:text-indigo-400 transition font-medium ${
-                  location.pathname === `/${link.toLowerCase()}` ? "text-indigo-400" : ""
-                }`}
-              >
-                {link}
-              </Link>
-            )
-          )}
+          {links.map((link, i) => (
+            <Link
+              key={i}
+              to={`/${link.toLowerCase()}`}
+              className={`relative text-white hover:text-indigo-400 transition font-medium ${
+                location.pathname === `/${link.toLowerCase()}` ? "text-indigo-400" : ""
+              }`}
+            >
+              {link}
+            </Link>
+          ))}
         </div>
 
-        {/* ACTION BUTTONS */}
+        {/* DESKTOP ACTIONS */}
         <div className="hidden md:flex items-center gap-4 ml-12">
-          {/* Theme Toggle */}
           <motion.button
             onClick={() => setDarkMode(!darkMode)}
             whileHover={{ scale: 1.1 }}
@@ -75,7 +76,6 @@ function Navbar() {
                 Login
               </Link>
             </motion.div>
-
             <motion.div whileHover={neonHover}>
               <Link
                 to="/register"
@@ -96,7 +96,6 @@ function Navbar() {
                 Dashboard
               </Link>
             </motion.div>
-
             <SignOutButton>
               <motion.button
                 whileHover={neonHover}
@@ -126,22 +125,23 @@ function Navbar() {
             exit={{ opacity: 0, y: -50 }}
             className="md:hidden absolute left-0 right-0 mt-2 bg-black/90 backdrop-blur rounded-xl flex flex-col items-center gap-4 py-6 mx-4 shadow-lg z-40"
           >
-            {["Home", "About", "Feedback", "Blogs", "Developer", "Privacy"].map(
-              (link, i) => (
-                <Link
-                  key={i}
-                  to={`/${link.toLowerCase()}`}
-                  onClick={() => setMenuOpen(false)}
-                  className="text-white text-lg w-full text-center py-2 rounded-lg hover:bg-indigo-600 transition"
-                >
-                  {link}
-                </Link>
-              )
-            )}
+            {links.map((link, i) => (
+              <Link
+                key={i}
+                to={`/${link.toLowerCase()}`}
+                onClick={() => setMenuOpen(false)}
+                className="text-white text-lg w-full text-center py-2 rounded-lg hover:bg-indigo-600 transition"
+              >
+                {link}
+              </Link>
+            ))}
 
             {/* MOBILE ACTIONS */}
             <button
-              onClick={() => setDarkMode(!darkMode)}
+              onClick={() => {
+                setDarkMode(!darkMode);
+                setMenuOpen(false);
+              }}
               className="border px-4 py-2 rounded-full w-3/4 text-center hover:bg-slate-800 transition"
             >
               {darkMode ? "Light Mode ☀️" : "Dark Mode 🌙"}
@@ -172,3 +172,4 @@ function Navbar() {
 }
 
 export default Navbar;
+
