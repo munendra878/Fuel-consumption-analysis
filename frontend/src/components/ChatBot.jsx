@@ -6,6 +6,14 @@ export default function ChatBot() {
   const navigate = useNavigate();
 
   /* ===============================
+     USER INFO
+  =============================== */
+  const userName =
+    localStorage.getItem("username") ||
+    localStorage.getItem("name") ||
+    "User";
+
+  /* ===============================
      UI STATES
   =============================== */
   const [open, setOpen] = useState(false);
@@ -28,8 +36,8 @@ export default function ChatBot() {
     {
       sender: "bot",
       text: `
-👋 <b>Hello! I'm your Fuel Analysis Assistant.</b><br/><br/>
-Type <b>help</b> to see all options.
+👋 <b>Welcome to the Fuel Consumption Analysis Chatbot!</b><br/><br/>
+Type <b>help</b> to see what I can do.
       `,
     },
   ]);
@@ -37,7 +45,6 @@ Type <b>help</b> to see all options.
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
 
-  const resizeRef = useRef(null);
   const resizing = useRef(false);
 
   /* ===============================
@@ -52,6 +59,7 @@ Type <b>help</b> to see all options.
      RESIZE LOGIC
   =============================== */
   const startResize = () => (resizing.current = true);
+
   const stopResize = () => {
     resizing.current = false;
     localStorage.setItem("chat-size", JSON.stringify(size));
@@ -76,15 +84,30 @@ Type <b>help</b> to see all options.
   });
 
   /* ===============================
-     BOT BRAIN (UNCHANGED LOGIC)
+     BOT BRAIN
   =============================== */
   const getBotReply = (question) => {
     const q = question.toLowerCase();
 
+    /* 👋 Greeting */
+    if (["hi", "hello", "hey", "hii"].some((w) => q.includes(w))) {
+      return `
+👋 <b>Hi ${userName}!</b><br/>
+Welcome to the <b>Fuel Consumption Analysis Chatbot</b> 🚗⛽
+      `;
+    }
+
     if (q.includes("help")) {
       return `
 <b>📌 Help Menu</b><br/>
-dashboard | prediction | upload | reports | recommendations | co2 | fuel | health
+• dashboard<br/>
+• prediction<br/>
+• upload dataset<br/>
+• reports<br/>
+• recommendations<br/>
+• co2<br/>
+• fuel<br/>
+• health
       `;
     }
 
@@ -94,38 +117,38 @@ dashboard | prediction | upload | reports | recommendations | co2 | fuel | healt
     }
 
     if (q.includes("predict")) {
-      navigate("/PredictionCard.jsx");
-      return "📈 Starting prediction...";
+      navigate("/prediction");
+      return "📈 Opening fuel prediction...";
     }
 
     if (q.includes("upload")) {
       navigate("/uploaddataset");
-      return "⬆ Upload your dataset.";
+      return "⬆ Redirecting to dataset upload...";
     }
 
     if (q.includes("report")) {
       navigate("/reports");
-      return "🧾 Showing reports.";
+      return "🧾 Showing reports...";
     }
 
     if (q.includes("recommend")) {
       navigate("/recommendations");
-      return "⭐ Finding recommendations.";
+      return "⭐ Fetching recommendations...";
     }
 
     if (q.includes("co2")) {
-      return "🌍 CO₂ = Fuel × 2392 g/km";
+      return "🌍 CO₂ emission ≈ Fuel × 2392 g/km";
     }
 
     if (q.includes("fuel")) {
-      return "⛽ Fuel is measured in L/100km.";
+      return "⛽ Fuel consumption is measured in L/100km.";
     }
 
     if (q.includes("health")) {
-      return "🟢 Backend Online | API Connected | DB Active";
+      return "🟢 System Status: Backend ✔ API ✔ Database ✔";
     }
 
-    return "🤖 I didn’t understand. Try <b>help</b>.";
+    return "🤖 I didn’t understand. Type <b>help</b>.";
   };
 
   /* ===============================
@@ -134,12 +157,16 @@ dashboard | prediction | upload | reports | recommendations | co2 | fuel | healt
   const sendMessage = () => {
     if (!input.trim()) return;
 
-    setMessages((p) => [...p, { sender: "user", text: input }]);
+    const userMsg = input;
+    setMessages((p) => [...p, { sender: "user", text: userMsg }]);
     setInput("");
     setTyping(true);
 
     setTimeout(() => {
-      setMessages((p) => [...p, { sender: "bot", text: getBotReply(input) }]);
+      setMessages((p) => [
+        ...p,
+        { sender: "bot", text: getBotReply(userMsg) },
+      ]);
       setTyping(false);
 
       if (!open) setUnread((u) => u + 1);
@@ -152,7 +179,13 @@ dashboard | prediction | upload | reports | recommendations | co2 | fuel | healt
   return (
     <>
       {/* FLOATING BUTTON */}
-      <button className="chatbot-fab" onClick={() => { setOpen(true); setUnread(0); }}>
+      <button
+        className="chatbot-fab"
+        onClick={() => {
+          setOpen(true);
+          setUnread(0);
+        }}
+      >
         💬
         {unread > 0 && <span className="chat-badge">{unread}</span>}
       </button>
@@ -165,7 +198,7 @@ dashboard | prediction | upload | reports | recommendations | co2 | fuel | healt
           {/* HEADER */}
           <div className="chat-header">
             <h4>Fuel AI</h4>
-            <div className="chat-actions">
+            <div>
               <button onClick={() => setDark(!dark)}>
                 {dark ? "☀" : "🌙"}
               </button>
@@ -195,14 +228,9 @@ dashboard | prediction | upload | reports | recommendations | co2 | fuel | healt
           </div>
 
           {/* RESIZER */}
-          <div
-            ref={resizeRef}
-            className="chat-resizer"
-            onMouseDown={startResize}
-          />
+          <div className="chat-resizer" onMouseDown={startResize} />
         </div>
       )}
     </>
   );
 }
-
