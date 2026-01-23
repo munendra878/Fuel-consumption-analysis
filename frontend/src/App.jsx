@@ -17,10 +17,7 @@ import Feedback from "./pages/Feedback";
 import Blogs from "./pages/Blogs";
 import About from "./pages/About";
 import Privacy from "./pages/Privacy";
-import UploadDataset from "./components/UploadDataset";
-import Reports from "./Components/Reports";
-import Recommendations from "./components/Recommendations";
-import Prediction from "./components/Prediction";
+
 
 function App() {
   const location = useLocation();
@@ -78,60 +75,7 @@ function App() {
               </>
             }
           />
-          <Route
-  path="/uploaddataset"
-  element={
-    <>
-      <SignedIn>
-        <UploadDataset />
-      </SignedIn>
-      <SignedOut>
-        <RedirectToSignIn />
-      </SignedOut>
-    </>
-  }
-/>
-      <Route
-  path="/reports"
-  element={
-    <>
-      <SignedIn>
-        <Reports />
-      </SignedIn>
-      <SignedOut>
-        <RedirectToSignIn />
-      </SignedOut>
-    </>
-  }
-/>
-
-<Route
-  path="/recommendations"
-  element={
-    <>
-      <SignedIn>
-        <Recommendations />
-      </SignedIn>
-      <SignedOut>
-        <RedirectToSignIn />
-      </SignedOut>
-    </>
-  }
-/>
-
-<Route
-  path="/prediction"
-  element={
-    <>
-      <SignedIn>
-        <Prediction />
-      </SignedIn>
-      <SignedOut>
-        <RedirectToSignIn />
-      </SignedOut>
-    </>
-  }
-/>    
+           
         </Routes>
       </main>
 
