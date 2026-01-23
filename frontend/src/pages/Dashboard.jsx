@@ -7,6 +7,7 @@ import PredictionCard from "../components/PredictionCard.jsx";
 import UploadDataset from "../components/UploadDataset.jsx";
 import GenerateReport from "../components/GenerateReport.jsx";
 import ChatBot from "../components/ChatBot.jsx";
+const API_URL = import.meta.env.VITE_API_URL;
 
 
 
@@ -39,7 +40,7 @@ export default function Dashboard() {
   // Load all vehicles from backend
   const fetchVehicles = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/vehicles");
+    const res = await axios.get(`${API_URL}/api/vehicles`);
       const vehiclesWithCO2 = res.data.map((v) => ({
         ...v,
         fuelConsumption: Number(v.fuelConsumption) || 0,
@@ -73,7 +74,7 @@ export default function Dashboard() {
     if (!window.confirm("Are you sure you want to delete this vehicle?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/vehicles/${id}`);
+     await axios.delete(`${API_URL}/api/vehicles/${id}`);
       setVehicles((prev) => prev.filter((v) => v._id !== id));
     } catch (err) {
       console.error(err);
