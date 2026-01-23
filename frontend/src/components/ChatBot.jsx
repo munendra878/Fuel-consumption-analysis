@@ -34,10 +34,11 @@ Type <b>help</b> to see all options.
 <b>📌 System Help Menu</b><br/><br/>
 
 📊 <b>Dashboard</b> – Overview of vehicles & CO₂  
-<a href="/dashboard">Go to Dashboard</a><br/><br/>
+<Link to="/dashboard">Go to Dashboard</Link>
+
 
 📈 <b>Prediction</b> – Predict fuel & emissions  
-<a href="/prediction">Go to Prediction</a><br/><br/>
+<Link to="/prediction">Go to Prediction</Link>
 
 ⬆ <b>Upload</b> – Upload CSV dataset  
 <a href="/upload">Upload Dataset</a><br/><br/>
