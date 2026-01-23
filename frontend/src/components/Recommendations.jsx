@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { FaCarSide, FaLeaf, FaStar } from "react-icons/fa";
 import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL;
+
 
 export default function Recommendations() {
   const [vehicles, setVehicles] = useState([]);
@@ -12,7 +14,8 @@ export default function Recommendations() {
   useEffect(() => {
     const fetchVehicles = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/vehicles");
+     const res = await axios.get(`${API_URL}/api/vehicles`);
+
         setVehicles(res.data);
       } catch (err) {
         console.error("Failed to fetch vehicles:", err);
