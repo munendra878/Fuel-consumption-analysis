@@ -1,25 +1,7 @@
 /* ===============================
    FLOATING AI ICON (FAB)
 ================================ */
-.chatbot-fab {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  border: none;
-  background: linear-gradient(135deg, #4f46e5, #22c55e);
-  color: white;
-  font-size: 26px;
-  cursor: pointer;
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: fixed;
-}
+
 
 /* 🔔 Unread Badge */
 .chat-badge {
