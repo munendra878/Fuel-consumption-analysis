@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Papa from "papaparse";
 import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const EMISSION_FACTOR = 2310;
 
@@ -19,7 +20,7 @@ export default function UploadDataset({ onUpdateVehicles }) {
   });
 
   const axiosAuth = axios.create({
-    baseURL: "http://localhost:5000/api",
+    baseURL: `${import.meta.env.VITE_API_URL}/api`,
   });
 
   /* ===============================
