@@ -1,5 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL;
+
 
 export default function PredictionCard({ onAddVehicle }) {
   const [engineSize, setEngineSize] = useState("");
@@ -21,7 +23,7 @@ export default function PredictionCard({ onAddVehicle }) {
     setResult(null);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/predict", {
+   const res = await axios.post(`${API_URL}/api/predict`, {
         engineSize: Number(engineSize),
         horsepower: Number(horsepower),
         cylinders: Number(cylinders),
@@ -30,7 +32,7 @@ export default function PredictionCard({ onAddVehicle }) {
       const predictedFuel = res.data.predictedFuel;
       setResult(predictedFuel);
 
-      const saved = await axios.post("http://localhost:5000/api/vehicles", {
+const saved = await axios.post(`${API_URL}/api/vehicles`, {
         engineSize: Number(engineSize),
         horsepower: Number(horsepower),
         cylinders: Number(cylinders),
