@@ -19,21 +19,21 @@ html, body {
 nav {
   position: fixed;
   top: 0;
-  left: 0;
-  right: 0;
-  z-index: 50;
-  backdrop-filter: blur(10px);
-  background-color: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(100, 116, 139, 0.3);
-  border-radius: 50px;
-  margin: 10px auto;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 95%;
   max-width: 1280px;
-  padding: 10px 20px;
+  z-index: 50;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: all 0.3s ease;
+  padding: 12px 20px;
+  border-radius: 50px;
+  backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(100,116,139,0.3);
   box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
 }
 
 /* ===============================
@@ -70,13 +70,13 @@ nav .desktop-links a {
   font-weight: 500;
   position: relative;
   transition: all 0.2s ease;
+  text-decoration: none;
 }
 
 nav .desktop-links a:hover {
   color: #6366f1;
 }
 
-/* Active link underline */
 nav .desktop-links a.active::after {
   content: "";
   position: absolute;
@@ -104,6 +104,10 @@ nav .actions a {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  border: none;
+  text-decoration: none;
+  color: #fff;
+  background: rgba(99,102,241,0.3);
 }
 
 nav .actions button:hover,
@@ -133,7 +137,7 @@ nav .actions a:hover {
    MOBILE MENU
 ================================ */
 .mobile-menu {
-  display: none;
+  display: none; /* hidden by default */
   flex-direction: column;
   gap: 12px;
   background: rgba(0,0,0,0.9);
@@ -146,6 +150,11 @@ nav .actions a:hover {
   border-radius: 20px;
   z-index: 40;
   text-align: center;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu.show {
+  display: flex;
 }
 
 .mobile-menu a,
@@ -156,6 +165,7 @@ nav .actions a:hover {
   border-radius: 10px;
   font-weight: 600;
   transition: all 0.2s ease;
+  text-decoration: none;
 }
 
 .mobile-menu a:hover,
@@ -198,9 +208,5 @@ nav .actions a:hover {
 
   .mobile-toggle {
     display: block;
-  }
-
-  .mobile-menu {
-    display: flex;
   }
 }
