@@ -15,31 +15,42 @@ import uploadRoutes from "./src/routes/upload.js";
 
 const app = express();
 
-// Connect to MongoDB
+// DB
 connectDB();
 
-// ===== MIDDLEWARES =====
+// CORS FIX ✅
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://fuel-consumption-analysis.vercel.app"
+];
+
 app.use(
   cors({
-    origin: "http://localhost:5173", // frontend URL
-    credentials: true,               // allow cookies/auth
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS not allowed"));
+      }
+    },
+    credentials: true
   })
 );
+
 app.use(express.json());
 
-// ===== ROUTES =====
+// Routes
 app.use("/api/users", userRoutes);
 app.use("/api/vehicles", vehicleRoutes);
 app.use("/api/predict", predictRoutes);
 app.use("/api/report", reportRoutes);
-app.use("/api", uploadRoutes); // upload CSV route
+app.use("/api", uploadRoutes);
 
-// Serve generated reports folder
 app.use("/reports", express.static(path.join(process.cwd(), "reports")));
-
 
 app.get("/", (req, res) => res.send("Backend running"));
 
-// ===== START SERVER =====
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () =>
+  console.log(`Server running on port ${PORT}`)
+);
