@@ -1,5 +1,6 @@
  # **Fuel Consumption Analysis** 🚗💨
- 
+
+ ---
 
 ![Node.js](https://img.shields.io/badge/Node.js-v18-green?style=flat-square) 
 ![React](https://img.shields.io/badge/React-v18-blue?style=flat-square) 
@@ -79,6 +80,5 @@ If you want, I can **also create an enhanced README version** with:
 
 This makes it **look professional and very GitHub-ready**.  
 
-Do you want me to do that next?
 
 ---
