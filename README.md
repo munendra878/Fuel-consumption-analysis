@@ -72,13 +72,6 @@ You can view the project live here:
 
 ---
 
-If you want, I can **also create an enhanced README version** with:  
-
-- GitHub badges (Node version, React, MongoDB)  
-- Screenshots of the dashboard  
-- A **Live Demo / Preview section**  
-
-This makes it **look professional and very GitHub-ready**.  
 
 
 ---
