@@ -1,7 +1,20 @@
 import { Link } from "react-router-dom";
 import { SignIn } from "@clerk/clerk-react";
+import { useState, useEffect } from "react";
 
 export default function UserLogin() {
+  const [darkMode, setDarkMode] = useState(false);
+
+  // Optional: persist dark mode preference in localStorage
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") setDarkMode(true);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("theme", darkMode ? "dark" : "light");
+  }, [darkMode]);
+
   return (
     <>
       {/* ================= NAVBAR ================= */}
@@ -37,11 +50,11 @@ export default function UserLogin() {
       </nav>
 
       {/* ================= LOGIN PAGE ================= */}
-    <div
-  className={`min-h-screen flex items-center justify-center pt-24 md:pt-28 ${
-    darkMode ? "bg-gray-800" : "bg-indigo-50"
-  }`}
->
+      <div
+        className={`min-h-screen flex items-center justify-center pt-24 md:pt-28 ${
+          darkMode ? "bg-gray-800" : "bg-indigo-50"
+        }`}
+      >
         <div className="w-full max-w-md bg-white p-6 rounded shadow-md">
           <SignIn
             routing="path"
@@ -49,7 +62,7 @@ export default function UserLogin() {
             signUpUrl="/register"
             fallbackRedirectUrl="/dashboard"
             appearance={{
-              baseTheme: "light", // change to "dark" if you want dark mode
+              baseTheme: darkMode ? "dark" : "light",
               variables: {
                 colorPrimary: "#4F46E5", // Indigo-600
               },
