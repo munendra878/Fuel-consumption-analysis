@@ -37,7 +37,11 @@ export default function UserLogin() {
       </nav>
 
       {/* ================= LOGIN PAGE ================= */}
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 pt-24 md:pt-28">
+    <div
+  className={`min-h-screen flex items-center justify-center pt-24 md:pt-28 ${
+    darkMode ? "bg-gray-800" : "bg-indigo-50"
+  }`}
+>
         <div className="w-full max-w-md bg-white p-6 rounded shadow-md">
           <SignIn
             routing="path"
