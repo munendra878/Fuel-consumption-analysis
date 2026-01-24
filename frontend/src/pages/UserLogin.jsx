@@ -37,13 +37,21 @@ export default function UserLogin() {
       </nav>
 
       {/* ================= LOGIN PAGE ================= */}
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 pt-20">
-        <SignIn
-          routing="path"
-          path="/login"
-          signUpUrl="/register"
-          fallbackRedirectUrl="/dashboard"
-        />
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 pt-24 md:pt-28">
+        <div className="w-full max-w-md bg-white p-6 rounded shadow-md">
+          <SignIn
+            routing="path"
+            path="/login"
+            signUpUrl="/register"
+            fallbackRedirectUrl="/dashboard"
+            appearance={{
+              baseTheme: "light", // change to "dark" if you want dark mode
+              variables: {
+                colorPrimary: "#4F46E5", // Indigo-600
+              },
+            }}
+          />
+        </div>
       </div>
     </>
   );
