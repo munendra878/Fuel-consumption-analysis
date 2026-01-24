@@ -110,12 +110,6 @@ Welcome to the <b>Fuel Consumption Analysis Chatbot</b> 🚗⛽
 • health
       `;
     }
-
-    if (q.includes("dashboard")) {
-      navigate("/dashboard");
-      return "📊 Opening dashboard...";
-    }
-
     if (q.includes("predict")) {
       navigate("/prediction");
       return "📈 Opening fuel prediction...";
