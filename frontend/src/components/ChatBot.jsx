@@ -4,6 +4,8 @@ import "./ChatBot.css";
 
 export default function ChatBot() {
   const navigate = useNavigate();
+  const chatEndRef = useRef(null);
+  const containerRef = useRef(null);
 
   /* ===============================
      USER INFO
@@ -23,29 +25,27 @@ export default function ChatBot() {
   );
 
   const [size, setSize] = useState(
-    JSON.parse(localStorage.getItem("chat-size")) || {
-      width: 340,
-      height: 440,
-    }
+    JSON.parse(localStorage.getItem("chat-size")) || { width: 340, height: 440 }
   );
+
+  const resizing = useRef(false);
 
   /* ===============================
      CHAT STATES
   =============================== */
-  const [messages, setMessages] = useState([
-    {
-      sender: "bot",
-      text: `
+  const [messages, setMessages] = useState(
+    JSON.parse(localStorage.getItem("chat-messages")) || [
+      {
+        sender: "bot",
+        text: `
 👋 <b>Welcome to the Fuel Consumption Analysis Chatbot!</b><br/><br/>
 Type <b>help</b> to see what I can do.
-      `,
-    },
-  ]);
-
+        `,
+      },
+    ]
+  );
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
-
-  const resizing = useRef(false);
 
   /* ===============================
      DARK MODE
@@ -59,18 +59,17 @@ Type <b>help</b> to see what I can do.
      RESIZE LOGIC
   =============================== */
   const startResize = () => (resizing.current = true);
-
   const stopResize = () => {
     resizing.current = false;
     localStorage.setItem("chat-size", JSON.stringify(size));
   };
-
   const resize = (e) => {
-    if (!resizing.current) return;
+    if (!resizing.current || !containerRef.current) return;
 
+    const rect = containerRef.current.getBoundingClientRect();
     setSize({
-      width: Math.max(300, window.innerWidth - e.clientX),
-      height: Math.max(360, window.innerHeight - e.clientY),
+      width: Math.max(300, e.clientX - rect.left),
+      height: Math.max(360, e.clientY - rect.top),
     });
   };
 
@@ -84,12 +83,25 @@ Type <b>help</b> to see what I can do.
   });
 
   /* ===============================
+     PERSIST MESSAGES
+  =============================== */
+  useEffect(() => {
+    localStorage.setItem("chat-messages", JSON.stringify(messages));
+  }, [messages]);
+
+  /* ===============================
+     AUTO SCROLL
+  =============================== */
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, typing, open]);
+
+  /* ===============================
      BOT BRAIN
   =============================== */
   const getBotReply = (question) => {
     const q = question.toLowerCase();
 
-    /* 👋 Greeting */
     if (["hi", "hello", "hey", "hii"].some((w) => q.includes(w))) {
       return `
 👋 <b>Hi ${userName}!</b><br/>
@@ -110,6 +122,7 @@ Welcome to the <b>Fuel Consumption Analysis Chatbot</b> 🚗⛽
 • health
       `;
     }
+
     if (q.includes("predict")) {
       navigate("/prediction");
       return "📈 Opening fuel prediction...";
@@ -130,17 +143,9 @@ Welcome to the <b>Fuel Consumption Analysis Chatbot</b> 🚗⛽
       return "⭐ Fetching recommendations...";
     }
 
-    if (q.includes("co2")) {
-      return "🌍 CO₂ emission ≈ Fuel × 2392 g/km";
-    }
-
-    if (q.includes("fuel")) {
-      return "⛽ Fuel consumption is measured in L/100km.";
-    }
-
-    if (q.includes("health")) {
-      return "🟢 System Status: Backend ✔ API ✔ Database ✔";
-    }
+    if (q.includes("co2")) return "🌍 CO₂ emission ≈ Fuel × 2392 g/km";
+    if (q.includes("fuel")) return "⛽ Fuel consumption is measured in L/100km.";
+    if (q.includes("health")) return "🟢 System Status: Backend ✔ API ✔ Database ✔";
 
     return "🤖 I didn’t understand. Type <b>help</b>.";
   };
@@ -152,17 +157,13 @@ Welcome to the <b>Fuel Consumption Analysis Chatbot</b> 🚗⛽
     if (!input.trim()) return;
 
     const userMsg = input;
-    setMessages((p) => [...p, { sender: "user", text: userMsg }]);
+    setMessages((prev) => [...prev, { sender: "user", text: userMsg }]);
     setInput("");
     setTyping(true);
 
     setTimeout(() => {
-      setMessages((p) => [
-        ...p,
-        { sender: "bot", text: getBotReply(userMsg) },
-      ]);
+      setMessages((prev) => [...prev, { sender: "bot", text: getBotReply(userMsg) }]);
       setTyping(false);
-
       if (!open) setUnread((u) => u + 1);
     }, 600);
   };
@@ -174,6 +175,7 @@ Welcome to the <b>Fuel Consumption Analysis Chatbot</b> 🚗⛽
     <>
       {/* FLOATING BUTTON */}
       <button
+        aria-label="Open Chat"
         className="chatbot-fab"
         onClick={() => {
           setOpen(true);
@@ -184,23 +186,27 @@ Welcome to the <b>Fuel Consumption Analysis Chatbot</b> 🚗⛽
         {unread > 0 && <span className="chat-badge">{unread}</span>}
       </button>
 
+      {/* CHAT WINDOW */}
       {open && (
         <div
+          ref={containerRef}
           className={`chatbot-container ${dark ? "dark" : ""}`}
           style={{ width: size.width, height: size.height }}
         >
           {/* HEADER */}
           <div className="chat-header">
             <h4>Fuel AI</h4>
-            <div>
-              <button onClick={() => setDark(!dark)}>
+            <div className="chat-header-buttons">
+              <button aria-label="Toggle Dark Mode" onClick={() => setDark(!dark)}>
                 {dark ? "☀" : "🌙"}
               </button>
-              <button onClick={() => setOpen(false)}>✖</button>
+              <button aria-label="Close Chat" onClick={() => setOpen(false)}>
+                ✖
+              </button>
             </div>
           </div>
 
-          {/* CHAT */}
+          {/* CHAT WINDOW */}
           <div className="chat-window">
             {messages.map((m, i) => (
               <div key={i} className={`chat-message ${m.sender}`}>
@@ -208,11 +214,13 @@ Welcome to the <b>Fuel Consumption Analysis Chatbot</b> 🚗⛽
               </div>
             ))}
             {typing && <div className="chat-message bot">Typing...</div>}
+            <div ref={chatEndRef} />
           </div>
 
           {/* INPUT */}
           <div className="chat-input">
             <input
+              aria-label="Type your message"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
