@@ -1,4 +1,9 @@
-# Fuel Consumption Analysis
+ Fuel Consumption Analysis 🚗💨
+
+![Node.js](https://img.shields.io/badge/Node.js-v18-green?style=flat-square) 
+![React](https://img.shields.io/badge/React-v18-blue?style=flat-square) 
+![MongoDB](https://img.shields.io/badge/MongoDB-v6-brightgreen?style=flat-square) 
+![Express.js](https://img.shields.io/badge/Express.js-v4-lightgrey?style=flat-square)
 
 **MONSTACK Project** using:  
 
@@ -40,10 +45,4 @@ The application is designed for  **environmental studies**, or **personal fuel t
 
 ---
 
-## Run Project
 
-### Backend
-
-1. Navigate to the backend folder:  
-   ```bash
-   cd backend
