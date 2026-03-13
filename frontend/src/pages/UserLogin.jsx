@@ -1,31 +1,31 @@
 import { Link } from "react-router-dom";
 import { SignIn } from "@clerk/clerk-react";
 import { useState, useEffect } from "react";
+import { dark, light } from "@clerk/themes";
 
 export default function UserLogin() {
   const [darkMode, setDarkMode] = useState(false);
 
-  // Optional: persist dark mode preference in localStorage
+  // Load theme
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "dark") setDarkMode(true);
   }, []);
 
+  // Save theme
   useEffect(() => {
     localStorage.setItem("theme", darkMode ? "dark" : "light");
   }, [darkMode]);
 
   return (
     <>
-      {/* ================= NAVBAR ================= */}
+      {/* NAVBAR */}
       <nav className="bg-white shadow-md fixed top-0 left-0 w-full z-50">
         <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
-          {/* Logo */}
           <h1 className="text-xl font-bold text-indigo-600">
             Fuel Consumption
           </h1>
 
-          {/* Links */}
           <div className="space-x-6">
             <Link
               to="/"
@@ -33,12 +33,14 @@ export default function UserLogin() {
             >
               Home
             </Link>
+
             <Link
               to="/register"
               className="text-gray-700 hover:text-indigo-600 font-medium"
             >
               Register
             </Link>
+
             <Link
               to="/login"
               className="text-indigo-600 font-semibold"
@@ -49,25 +51,27 @@ export default function UserLogin() {
         </div>
       </nav>
 
-      {/* ================= LOGIN PAGE ================= */}
+      {/* LOGIN PAGE */}
       <div
         className={`min-h-screen flex items-center justify-center pt-24 md:pt-28 ${
           darkMode ? "bg-gray-800" : "bg-indigo-50"
         }`}
       >
         <div className="w-full max-w-md bg-white p-6 rounded shadow-md">
+
           <SignIn
             routing="path"
             path="/login"
             signUpUrl="/register"
             fallbackRedirectUrl="/dashboard"
             appearance={{
-              baseTheme: darkMode ? "dark" : "light",
+              baseTheme: darkMode ? dark : light,
               variables: {
-                colorPrimary: "#4F46E5", // Indigo-600
+                colorPrimary: "#4F46E5",
               },
             }}
           />
+
         </div>
       </div>
     </>
